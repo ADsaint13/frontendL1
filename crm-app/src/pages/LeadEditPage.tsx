@@ -2,12 +2,8 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useLead, useUpdateLead } from '../hooks';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
 import ErrorMessage from '../components/ui/ErrorMessage';
-import type { UpdateLeadPayload, LeadStatus, LeadSource } from '../types';
-
-const STATUS_OPTIONS: LeadStatus[] = ['new', 'contacted', 'qualified', 'proposal', 'won', 'lost'];
-const SOURCE_OPTIONS: LeadSource[] = [
-  'website', 'referral', 'social_media', 'cold_call', 'email_campaign', 'other',
-];
+import { LeadStatus, LeadSource } from '../types';
+import type { UpdateLeadPayload } from '../types';
 
 export default function LeadEditPage() {
   const { id } = useParams<{ id: string }>();
@@ -30,7 +26,6 @@ export default function LeadEditPage() {
 
   return (
     <div className="space-y-6 max-w-2xl">
-      {/* ── Header ── */}
       <div className="flex items-center justify-between">
         <Link to={`/leads/${id}`} className="text-sm text-indigo-600 hover:underline">
           ← Back to Lead
@@ -39,37 +34,21 @@ export default function LeadEditPage() {
 
       <h1 className="text-2xl font-bold text-gray-900">Edit Lead</h1>
 
-      {/* ── Form ── */}
       <form
         onSubmit={handleSubmit}
         className="rounded-xl border border-gray-200 bg-white p-8 shadow-sm space-y-6"
       >
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
-          {/* First Name */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700" htmlFor="firstName">
-              First Name
+          {/* Name */}
+          <div className="sm:col-span-2">
+            <label className="block text-sm font-medium text-gray-700" htmlFor="name">
+              Full Name
             </label>
             <input
-              id="firstName"
-              name="firstName"
+              id="name"
+              name="name"
               type="text"
-              defaultValue={lead.firstName}
-              required
-              className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-            />
-          </div>
-
-          {/* Last Name */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700" htmlFor="lastName">
-              Last Name
-            </label>
-            <input
-              id="lastName"
-              name="lastName"
-              type="text"
-              defaultValue={lead.lastName}
+              defaultValue={lead.name}
               required
               className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
             />
@@ -104,35 +83,6 @@ export default function LeadEditPage() {
             />
           </div>
 
-          {/* Company */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700" htmlFor="company">
-              Company
-            </label>
-            <input
-              id="company"
-              name="company"
-              type="text"
-              defaultValue={lead.company ?? ''}
-              className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-            />
-          </div>
-
-          {/* Value */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700" htmlFor="value">
-              Estimated Value ($)
-            </label>
-            <input
-              id="value"
-              name="value"
-              type="number"
-              min="0"
-              defaultValue={lead.value ?? ''}
-              className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-            />
-          </div>
-
           {/* Status */}
           <div>
             <label className="block text-sm font-medium text-gray-700" htmlFor="status">
@@ -144,9 +94,9 @@ export default function LeadEditPage() {
               defaultValue={lead.status}
               className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
             >
-              {STATUS_OPTIONS.map((s) => (
+              {Object.values(LeadStatus).map((s) => (
                 <option key={s} value={s}>
-                  {s.charAt(0).toUpperCase() + s.slice(1)}
+                  {s.charAt(0) + s.slice(1).toLowerCase()}
                 </option>
               ))}
             </select>
@@ -163,27 +113,13 @@ export default function LeadEditPage() {
               defaultValue={lead.source}
               className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
             >
-              {SOURCE_OPTIONS.map((s) => (
+              {Object.values(LeadSource).map((s) => (
                 <option key={s} value={s}>
-                  {s.replace(/_/g, ' ').replace(/^\w/, (c) => c.toUpperCase())}
+                  {s.replace(/_/g, ' ').replace(/^\w/, (c) => c.toUpperCase()).toLowerCase().replace(/^\w/, (c) => c.toUpperCase())}
                 </option>
               ))}
             </select>
           </div>
-        </div>
-
-        {/* Notes */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700" htmlFor="notes">
-            Notes
-          </label>
-          <textarea
-            id="notes"
-            name="notes"
-            rows={4}
-            defaultValue={lead.notes ?? ''}
-            className="mt-1 block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
-          />
         </div>
 
         {/* Actions */}

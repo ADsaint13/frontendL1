@@ -1,23 +1,22 @@
-import { type LeadStatus, type LeadSource } from '../types';
+import { LeadStatus, LeadSource } from '../types';
 
 // ─── Status badge colour map ──────────────────────────────────────────────────
 
 export const STATUS_COLORS: Record<LeadStatus, string> = {
-  new: 'bg-blue-100 text-blue-800',
-  contacted: 'bg-yellow-100 text-yellow-800',
-  qualified: 'bg-purple-100 text-purple-800',
-  proposal: 'bg-orange-100 text-orange-800',
-  won: 'bg-green-100 text-green-800',
-  lost: 'bg-red-100 text-red-800',
+  [LeadStatus.NEW]: 'bg-blue-100 text-blue-800',
+  [LeadStatus.CONTACTED]: 'bg-yellow-100 text-yellow-800',
+  [LeadStatus.QUALIFIED]: 'bg-purple-100 text-purple-800',
+  [LeadStatus.CONVERTED]: 'bg-green-100 text-green-800',
+  [LeadStatus.LOST]: 'bg-red-100 text-red-800',
 };
 
 export const SOURCE_LABELS: Record<LeadSource, string> = {
-  website: 'Website',
-  referral: 'Referral',
-  social_media: 'Social Media',
-  cold_call: 'Cold Call',
-  email_campaign: 'Email Campaign',
-  other: 'Other',
+  [LeadSource.WEBSITE]: 'Website',
+  [LeadSource.REFERRAL]: 'Referral',
+  [LeadSource.SOCIAL_MEDIA]: 'Social Media',
+  [LeadSource.COLD_CALL]: 'Cold Call',
+  [LeadSource.EMAIL_CAMPAIGN]: 'Email Campaign',
+  [LeadSource.OTHER]: 'Other',
 };
 
 // ─── Formatting helpers ───────────────────────────────────────────────────────

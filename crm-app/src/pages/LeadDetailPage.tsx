@@ -3,7 +3,7 @@ import { useLead } from '../hooks';
 import StatusBadge from '../components/ui/StatusBadge';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
 import ErrorMessage from '../components/ui/ErrorMessage';
-import { formatDate, formatCurrency, SOURCE_LABELS } from '../utils/formatters';
+import { formatDate, SOURCE_LABELS } from '../utils/formatters';
 
 export default function LeadDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -16,11 +16,9 @@ export default function LeadDetailPage() {
   const fields: { label: string; value: string | undefined }[] = [
     { label: 'Email', value: lead.email },
     { label: 'Phone', value: lead.phone },
-    { label: 'Company', value: lead.company },
     { label: 'Source', value: SOURCE_LABELS[lead.source] },
-    { label: 'Value', value: lead.value != null ? formatCurrency(lead.value) : undefined },
-    { label: 'Created', value: formatDate(lead.createdAt) },
-    { label: 'Updated', value: formatDate(lead.updatedAt) },
+    { label: 'Created', value: formatDate(lead.created_at) },
+    { label: 'Updated', value: formatDate(lead.updated_at) },
   ];
 
   return (
@@ -42,9 +40,7 @@ export default function LeadDetailPage() {
       <div className="rounded-xl border border-gray-200 bg-white p-8 shadow-sm">
         <div className="flex items-start justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">
-              {lead.firstName} {lead.lastName}
-            </h1>
+            <h1 className="text-2xl font-bold text-gray-900">{lead.name}</h1>
             <p className="text-sm text-gray-500">{lead.email}</p>
           </div>
           <StatusBadge status={lead.status} />
@@ -58,13 +54,6 @@ export default function LeadDetailPage() {
             </div>
           ))}
         </dl>
-
-        {lead.notes && (
-          <div className="mt-6">
-            <p className="text-xs font-medium uppercase tracking-wide text-gray-400">Notes</p>
-            <p className="mt-1 text-sm text-gray-700 whitespace-pre-wrap">{lead.notes}</p>
-          </div>
-        )}
       </div>
     </div>
   );

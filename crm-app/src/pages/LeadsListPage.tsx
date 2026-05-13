@@ -3,7 +3,7 @@ import { useLeads } from '../hooks';
 import StatusBadge from '../components/ui/StatusBadge';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
 import ErrorMessage from '../components/ui/ErrorMessage';
-import { formatDate, formatCurrency } from '../utils/formatters';
+import { formatDate } from '../utils/formatters';
 
 export default function LeadsListPage() {
   const { data, isLoading, isError, error } = useLeads();
@@ -37,7 +37,7 @@ export default function LeadsListPage() {
           <table className="min-w-full divide-y divide-gray-100">
             <thead className="bg-gray-50">
               <tr>
-                {['Name', 'Company', 'Status', 'Value', 'Created'].map((h) => (
+                {['Name', 'Email', 'Phone', 'Status', 'Source', 'Created'].map((h) => (
                   <th
                     key={h}
                     className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500"
@@ -55,18 +55,16 @@ export default function LeadsListPage() {
                       to={`/leads/${lead.id}`}
                       className="font-medium text-indigo-600 hover:underline"
                     >
-                      {lead.firstName} {lead.lastName}
+                      {lead.name}
                     </Link>
-                    <p className="text-xs text-gray-400">{lead.email}</p>
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-700">{lead.company ?? '—'}</td>
+                  <td className="px-6 py-4 text-sm text-gray-700">{lead.email}</td>
+                  <td className="px-6 py-4 text-sm text-gray-700">{lead.phone ?? '—'}</td>
                   <td className="px-6 py-4">
                     <StatusBadge status={lead.status} />
                   </td>
-                  <td className="px-6 py-4 text-sm text-gray-700">
-                    {lead.value != null ? formatCurrency(lead.value) : '—'}
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-500">{formatDate(lead.createdAt)}</td>
+                  <td className="px-6 py-4 text-sm text-gray-700">{lead.source}</td>
+                  <td className="px-6 py-4 text-sm text-gray-500">{formatDate(lead.created_at)}</td>
                 </tr>
               ))}
             </tbody>
