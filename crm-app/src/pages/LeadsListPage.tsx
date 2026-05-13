@@ -1,17 +1,11 @@
 import { Link } from 'react-router-dom';
 import { useLeads } from '../hooks';
-import StatusBadge from '../components/ui/StatusBadge';
+import LeadTable from '../components/ui/LeadTable';
 import LoadingSpinner from '../components/ui/LoadingSpinner';
 import ErrorMessage from '../components/ui/ErrorMessage';
-import { formatDate } from '../utils/formatters';
 
 export default function LeadsListPage() {
   const { data, isLoading, isError, error } = useLeads();
-
-  if (isLoading) return <LoadingSpinner />;
-  if (isError) return <ErrorMessage message={(error as Error).message} />;
-
-  const leads = data?.data ?? [];
 
   return (
     <div className="space-y-6">
@@ -19,57 +13,28 @@ export default function LeadsListPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Leads</h1>
-          <p className="mt-1 text-sm text-gray-500">{data?.total ?? 0} total leads</p>
+          <p className="mt-1 text-sm text-gray-500">
+            {data?.total ?? 0} total lead{data?.total !== 1 ? 's' : ''}
+          </p>
         </div>
         <Link
           to="/leads/new"
-          className="inline-flex items-center rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-indigo-700 transition-colors"
+          className="inline-flex items-center gap-1.5 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-indigo-700 transition-colors"
         >
-          + New Lead
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="size-4">
+            <path d="M8.75 3.75a.75.75 0 0 0-1.5 0v3.5h-3.5a.75.75 0 0 0 0 1.5h3.5v3.5a.75.75 0 0 0 1.5 0v-3.5h3.5a.75.75 0 0 0 0-1.5h-3.5v-3.5Z" />
+          </svg>
+          New Lead
         </Link>
       </div>
 
+      {/* ── States ── */}
+      {isLoading && <LoadingSpinner />}
+      {isError && <ErrorMessage message={(error as Error).message} />}
+
       {/* ── Table ── */}
-      {leads.length === 0 ? (
-        <p className="text-gray-500 text-sm">No leads found.</p>
-      ) : (
-        <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
-          <table className="min-w-full divide-y divide-gray-100">
-            <thead className="bg-gray-50">
-              <tr>
-                {['Name', 'Email', 'Phone', 'Status', 'Source', 'Created'].map((h) => (
-                  <th
-                    key={h}
-                    className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500"
-                  >
-                    {h}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100">
-              {leads.map((lead) => (
-                <tr key={lead.id} className="hover:bg-indigo-50 transition-colors">
-                  <td className="px-6 py-4">
-                    <Link
-                      to={`/leads/${lead.id}`}
-                      className="font-medium text-indigo-600 hover:underline"
-                    >
-                      {lead.name}
-                    </Link>
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-700">{lead.email}</td>
-                  <td className="px-6 py-4 text-sm text-gray-700">{lead.phone ?? '—'}</td>
-                  <td className="px-6 py-4">
-                    <StatusBadge status={lead.status} />
-                  </td>
-                  <td className="px-6 py-4 text-sm text-gray-700">{lead.source}</td>
-                  <td className="px-6 py-4 text-sm text-gray-500">{formatDate(lead.created_at)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+      {!isLoading && !isError && (
+        <LeadTable leads={data?.data ?? []} />
       )}
     </div>
   );
