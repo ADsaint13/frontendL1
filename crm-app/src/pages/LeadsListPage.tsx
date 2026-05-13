@@ -1,13 +1,14 @@
+import { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { useLeads } from '../hooks';
+import { useLeads, useDebounce } from '../hooks';
 import LeadTable from '../components/ui/LeadTable';
+import LeadFiltersBar, { type FilterState } from '../components/ui/LeadFiltersBar';
 
-// ─── Loading State ────────────────────────────────────────────────────────────
+// ─── Loading skeleton ─────────────────────────────────────────────────────────
 
 function LeadsLoadingState() {
   return (
     <div className="overflow-hidden rounded-xl border border-gray-200 bg-white shadow-sm">
-      {/* Shimmer header */}
       <div className="border-b border-gray-100 bg-gray-50 px-6 py-3.5">
         <div className="flex gap-8">
           {['w-12', 'w-16', 'w-14', 'w-14', 'w-16', 'w-14'].map((w, i) => (
@@ -15,7 +16,6 @@ function LeadsLoadingState() {
           ))}
         </div>
       </div>
-      {/* Shimmer rows */}
       {Array.from({ length: 6 }).map((_, i) => (
         <div
           key={i}
@@ -38,40 +38,24 @@ function LeadsLoadingState() {
   );
 }
 
-// ─── Error State ──────────────────────────────────────────────────────────────
+// ─── Error panel ──────────────────────────────────────────────────────────────
 
 function LeadsErrorState({ message, onRetry }: { message: string; onRetry: () => void }) {
   return (
     <div className="flex flex-col items-center justify-center rounded-xl border border-red-200 bg-red-50 px-6 py-16 text-center shadow-sm">
-      {/* Icon */}
       <div className="flex h-12 w-12 items-center justify-center rounded-full bg-red-100">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="currentColor"
-          className="size-6 text-red-600"
-        >
-          <path
-            fillRule="evenodd"
-            d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 8.25a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z"
-            clipRule="evenodd"
-          />
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6 text-red-600">
+          <path fillRule="evenodd" d="M9.401 3.003c1.155-2 4.043-2 5.197 0l7.355 12.748c1.154 2-.29 4.5-2.599 4.5H4.645c-2.309 0-3.752-2.5-2.598-4.5L9.4 3.003ZM12 8.25a.75.75 0 0 1 .75.75v3.75a.75.75 0 0 1-1.5 0V9a.75.75 0 0 1 .75-.75Zm0 8.25a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z" clipRule="evenodd" />
         </svg>
       </div>
-
       <h2 className="mt-4 text-base font-semibold text-red-800">Failed to load leads</h2>
       <p className="mt-1 max-w-sm text-sm text-red-600">{message}</p>
-
       <button
         onClick={onRetry}
         className="mt-6 inline-flex items-center gap-2 rounded-lg bg-red-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-red-700 transition-colors"
       >
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="size-4">
-          <path
-            fillRule="evenodd"
-            d="M13.836 2.477a.75.75 0 0 1 .75.75v3.182a.75.75 0 0 1-.75.75h-3.182a.75.75 0 0 1 0-1.5h1.37l-.84-.841a4.5 4.5 0 0 0-7.08.932.75.75 0 0 1-1.3-.75 6 6 0 0 1 9.44-1.242l.842.84V3.227a.75.75 0 0 1 .75-.75Zm-.911 7.5A.75.75 0 0 1 13.199 11a6 6 0 0 1-9.44 1.241l-.84-.84v1.371a.75.75 0 0 1-1.5 0V9.591a.75.75 0 0 1 .75-.75H5.35a.75.75 0 0 1 0 1.5H3.98l.841.841a4.5 4.5 0 0 0 7.08-.932.75.75 0 0 1 1.025-.273Z"
-            clipRule="evenodd"
-          />
+          <path fillRule="evenodd" d="M13.836 2.477a.75.75 0 0 1 .75.75v3.182a.75.75 0 0 1-.75.75h-3.182a.75.75 0 0 1 0-1.5h1.37l-.84-.841a4.5 4.5 0 0 0-7.08.932.75.75 0 0 1-1.3-.75 6 6 0 0 1 9.44-1.242l.842.84V3.227a.75.75 0 0 1 .75-.75Zm-.911 7.5A.75.75 0 0 1 13.199 11a6 6 0 0 1-9.44 1.241l-.84-.84v1.371a.75.75 0 0 1-1.5 0V9.591a.75.75 0 0 1 .75-.75H5.35a.75.75 0 0 1 0 1.5H3.98l.841.841a4.5 4.5 0 0 0 7.08-.932.75.75 0 0 1 1.025-.273Z" clipRule="evenodd" />
         </svg>
         Try again
       </button>
@@ -82,22 +66,40 @@ function LeadsErrorState({ message, onRetry }: { message: string; onRetry: () =>
 // ─── Leads List Page ──────────────────────────────────────────────────────────
 
 /**
- * Fetches leads via React Query (useLeads) and renders one of three states:
+ * Fetches all leads once via React Query, then applies client-side
+ * filtering so search and status changes feel instant with no extra
+ * network requests.
  *
- *  1. Loading  — skeleton shimmer rows while the request is in-flight
- *  2. Error    — red alert card with a "Try again" refetch button
- *  3. Success  — data passed into <LeadTable>; LeadTable handles its own
- *               empty state when data.length === 0
+ * Filter flow:
+ *   raw input  →  useDebounce (300 ms)  →  useMemo filter  →  LeadTable
  */
 export default function LeadsListPage() {
-  const { data, isLoading, isError, error, refetch } = useLeads();
+  // ── Filter state (raw — drives the controlled inputs) ──────────────────────
+  const [filters, setFilters] = useState<FilterState>({ search: '', status: '' });
 
-  // Derive the lead array; empty array is intentional — LeadTable shows its
-  // own empty-state UI when leads.length === 0
-  const leads = data?.data ?? [];
+  // ── Debounce the search term so filtering only runs after typing stops ─────
+  const debouncedSearch = useDebounce(filters.search, 300);
+
+  // ── Fetch all leads once; refetch is manual (error recovery only) ──────────
+  const { data, isLoading, isError, error, refetch } = useLeads();
+  const allLeads = data?.data ?? [];
+
+  // ── Client-side filter — runs only when debounced search or status change ──
+  const filteredLeads = useMemo(() => {
+    const term = debouncedSearch.toLowerCase().trim();
+    return allLeads.filter((lead) => {
+      // Status filter
+      if (filters.status && lead.status !== filters.status) return false;
+      // Search filter — name OR email
+      if (term && !lead.name.toLowerCase().includes(term) && !lead.email.toLowerCase().includes(term)) {
+        return false;
+      }
+      return true;
+    });
+  }, [allLeads, debouncedSearch, filters.status]);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* ── Page header ── */}
       <div className="flex items-center justify-between">
         <div>
@@ -107,7 +109,7 @@ export default function LeadsListPage() {
               ? 'Loading…'
               : isError
               ? 'Could not load leads'
-              : `${data?.total ?? 0} total lead${data?.total !== 1 ? 's' : ''}`}
+              : `${allLeads.length} total lead${allLeads.length !== 1 ? 's' : ''}`}
           </p>
         </div>
 
@@ -115,12 +117,7 @@ export default function LeadsListPage() {
           to="/leads/new"
           className="inline-flex items-center gap-1.5 rounded-lg bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow hover:bg-indigo-700 transition-colors"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 16 16"
-            fill="currentColor"
-            className="size-4"
-          >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" className="size-4">
             <path d="M8.75 3.75a.75.75 0 0 0-1.5 0v3.5h-3.5a.75.75 0 0 0 0 1.5h3.5v3.5a.75.75 0 0 0 1.5 0v-3.5h3.5a.75.75 0 0 0 0-1.5h-3.5v-3.5Z" />
           </svg>
           New Lead
@@ -138,8 +135,21 @@ export default function LeadsListPage() {
         />
       )}
 
-      {/* ── 3. Success state — data piped into LeadTable ── */}
-      {!isLoading && !isError && <LeadTable leads={leads} />}
+      {/* ── 3. Success state ── */}
+      {!isLoading && !isError && (
+        <>
+          {/* Filter bar — only shown when there is data to filter */}
+          <LeadFiltersBar
+            filters={filters}
+            onChange={setFilters}
+            totalVisible={filteredLeads.length}
+            totalAll={allLeads.length}
+          />
+
+          {/* Filtered data into table */}
+          <LeadTable leads={filteredLeads} />
+        </>
+      )}
     </div>
   );
 }
