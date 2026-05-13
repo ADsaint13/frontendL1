@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { leadsService } from '../services';
+import { getLeadById } from '../services';
 
 export const LEAD_QUERY_KEY = 'lead' as const;
 
@@ -10,6 +10,6 @@ export const LEAD_QUERY_KEY = 'lead' as const;
 export const useLead = (id: string | undefined) =>
   useQuery({
     queryKey: [LEAD_QUERY_KEY, id],
-    queryFn: () => leadsService.getById(id!),
+    queryFn: () => getLeadById(id!),
     enabled: !!id,
   });

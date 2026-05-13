@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { leadsService } from '../services';
+import { getLeads } from '../services';
 import type { LeadFilters } from '../types';
 
 export const LEADS_QUERY_KEY = 'leads' as const;
@@ -11,5 +11,5 @@ export const LEADS_QUERY_KEY = 'leads' as const;
 export const useLeads = (filters?: LeadFilters) =>
   useQuery({
     queryKey: [LEADS_QUERY_KEY, filters],
-    queryFn: () => leadsService.getAll(filters),
+    queryFn: () => getLeads(filters),
   });

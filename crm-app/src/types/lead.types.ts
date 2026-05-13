@@ -57,6 +57,11 @@ export type CreateLeadPayload = Omit<Lead, 'id' | 'created_at' | 'updated_at'>;
 /** All lead fields are optional for a PATCH update. */
 export type UpdateLeadPayload = Partial<CreateLeadPayload>;
 
+/** Payload for the dedicated status-transition endpoint. */
+export interface UpdateLeadStatusPayload {
+  status: LeadStatus;
+}
+
 // ─── Paginated Response ───────────────────────────────────────────────────────
 
 export interface PaginatedLeads {
