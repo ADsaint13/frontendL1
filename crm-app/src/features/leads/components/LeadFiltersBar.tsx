@@ -1,5 +1,5 @@
-import { LeadStatus } from '../../types';
-import type { LeadStatus as LeadStatusType } from '../../types';
+import { LeadStatus } from '../types/lead.types';
+import type { LeadStatus as LeadStatusType } from '../types/lead.types';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 

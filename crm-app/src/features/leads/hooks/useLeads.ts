@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
-import { getLeads } from '../services';
-import type { LeadFilters } from '../types';
+import { getLeads } from '../api/leads.api';
+import type { LeadFilters } from '../types/lead.types';
 
 export const LEADS_QUERY_KEY = 'leads' as const;
 

@@ -1,5 +1,6 @@
-import { type LeadStatus } from '../../types';
-import { STATUS_COLORS, humanize } from '../../utils/formatters';
+import { LeadStatus } from '../types/lead.types';
+import type { LeadStatus as LeadStatusType } from '../types/lead.types';
+import { STATUS_COLORS, humanize } from '../../../utils/formatters';
 
 interface StatusBadgeProps {
   status: LeadStatus;

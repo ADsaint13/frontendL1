@@ -1,4 +1,4 @@
-import { LeadStatus, LeadSource } from '../types';
+import { LeadStatus, LeadSource } from '../features/leads';
 
 // ─── Status badge colour map ──────────────────────────────────────────────────
 

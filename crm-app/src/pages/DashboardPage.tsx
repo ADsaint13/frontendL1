@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { useLeads } from '../hooks';
+import { useLeads } from '../features/leads';
 
 const stats = [
   { label: 'Total Leads', key: 'total' },

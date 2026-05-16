@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { getLeadById } from '../services';
+import { getLeadById } from '../api/leads.api';
 
 export const LEAD_QUERY_KEY = 'lead' as const;
 

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import apiClient from '../utils/apiClient';
+import apiClient from '../../../lib/apiClient';
 import type {
   Lead,
   CreateLeadPayload,
@@ -7,7 +7,7 @@ import type {
   UpdateLeadStatusPayload,
   PaginatedLeads,
   LeadFilters,
-} from '../types';
+} from '../types/lead.types';
 
 // ─── Error Handling ───────────────────────────────────────────────────────────
 
@@ -45,7 +45,11 @@ const BASE = '/leads';
  */
 export async function getLeads(filters?: LeadFilters): Promise<PaginatedLeads> {
   try {
-    const { data } = await apiClient.get<PaginatedLeads>(BASE, { params: filters });
+    const { data } = await apiClient.get<Lead[] | PaginatedLeads>(BASE, { params: filters });
+    // Mock server returns a plain array; normalise into PaginatedLeads shape
+    if (Array.isArray(data)) {
+      return { data, total: data.length, page: 1, limit: data.length };
+    }
     return data;
   } catch (error) {
     handleError(error);
@@ -88,7 +92,10 @@ export async function createLead(payload: CreateLeadPayload): Promise<Lead> {
  */
 export async function updateLead(id: string, payload: UpdateLeadPayload): Promise<Lead> {
   try {
-    const { data } = await apiClient.patch<Lead>(`${BASE}/${id}`, payload);
+    // Mock server only has PUT for general updates; fall back gracefully
+    const { data } = await apiClient.put<Lead>(`${BASE}/${id}`, payload).catch(
+      () => apiClient.patch<Lead>(`${BASE}/${id}`, payload)
+    );
     return data;
   } catch (error) {
     handleError(error);

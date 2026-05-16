@@ -1,0 +1,36 @@
+Acme Inc.
+Quick Search... ctrl+k
+Home
+Super
+Reports & Analytics
+Search smartboards...
+WORKSPACE SMARTBOARDS
+Solution Requests
+Parent Accounts
+My Tasks
+WORKSPACE
+Accounts
+Opportunities
+Contacts
+Leads
+Deal Support Requests
+FreshDesk Tickets
+SRF SPR
+BANT Qualifications
+Tasks
+JJamie CarterAccounts/All Accounts Search... ⌘K Save as SmartboardAdd Merchant Super
+Sort by Updated atAccount StatusGrowth CategoryOwnerNameCreated at 4 Rules Filter View Settings
+…NNorth… MMerchant AcmeXP7FxpPGEy hello@northwind.example IPriya Sharma
+…GGlobe… MMerchant AcmeY11KbUatyOR sales@globex.example IArjun Mehta
+…? MMerchant AcmeM567wLW4OuN contact@example.com IPriya Sharma
+…?Unassi… MMerchant AcmeoZvpaShaVr9 IArjun Mehta
+…IInitech… MMerchant AcmeZIA6558ecN0 team@initech.example IDiya Kapoor
+…WWayne… MMerchant AcmeXdQuPyEfMu8 info@wayne.example IPriya Sharma
+…SStark I… MMerchant AcmefQtphh56900 partners@stark.example IRohan Iyer
+…?Unassi… MMerchant AcmeHTKvuvfgipj lead@example.com IDiya Kapoor
+…SSoylen… MMerchant AcmeRoKpatqLbvA hello@soylent.example IArjun Mehta
+…VVandel… MMerchant AcmeHIkX5hhNv9b office@vandelay.example IRohan Iyer
+…HHooli T… MMerchant AcmeZ1QyDhpvG4C support@hooli.example IPriya Sharma
+…PPied Pi… MMerchant AcmegUx12Mczk8v IDiya Kapoor
+…MMassi… MMerchant AcmeyJ15nXzxqi contact@massivedynamic.example IRohan Iyer
+Previous12345Next Total count30 per pageNAME RECORD TYPE MERCHANT ID EMAIL OWNER
